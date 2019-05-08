@@ -23,11 +23,10 @@ services:
     environment:
       - NODE_ENV=dev
       - DB_HOST=db
-      - VIRTUAL_HOST=express-mongo.local
     volumes:
       - ./src:/home/node/app/src
-    expose:
-      - 80
+    ports:
+      - 9000:9000
     links:
       - db
     depends_on:
