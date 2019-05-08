@@ -1,0 +1,34 @@
+version: '3'
+services:
+  db:
+    build:
+      context: ./
+      dockerfile: ./docker/db/Dockerfile
+    restart: always
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data:/data/db
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+
+  api:
+    build:
+      context: ./
+      dockerfile: ./docker/api/Dockerfile
+    restart: always
+    environment:
+      - NODE_ENV=dev
+      - DB_HOST=db
+      - VIRTUAL_HOST=express-mongo.local
+    volumes:
+      - ./src:/home/node/app/src
+    expose:
+      - 80
+    links:
+      - db
+    depends_on:
+      - db
