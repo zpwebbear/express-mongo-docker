@@ -18,6 +18,6 @@ app.use('/', routes);
 
 const port = process.env.PORT || config.server.port;
 app.listen(port);
-console.log('Node + Express REST API skeleton server started on port: ' + port);
+console.log('Node + Express + MongoDB server started on port: ' + port);
 
 module.exports = app;
