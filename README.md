@@ -1,4 +1,4 @@
-# Node + Express + MongoDB template
+**# Node + Express + MongoDB template
 
 Заготовка для создания проектов на связке Express + MongoDB
 
@@ -51,4 +51,10 @@
    1. https://github.com/seppevs/migrate-mongo#readme
    2. http://isizov.ru/migratsii-mongodb/
 2. mongoose-seed - пакет для создания сидов для MongoDB
-   1. https://github.com/seanemmer/mongoose-seed#readme
+   1. https://github.com/seanemmer/mongoose-seed#readme**
+
+## Возможные трудности
+
+1. При запуске сервиса через docker-compose express api слушает доступно по порту **9000**, а MongoDB по порту **27017**. При старте сервиса возможна ошибка в случае если на хосте заняты данные порты - либо уже работает express приложение, либо установленная локально MongoDB. Есть два возможных решения данной проблемы:
+   1. Остановить локально установленную MongoDB и все приложения которые слушают порт 9000
+   2. Поменять порты в docker-compose.yml. Изменять нужно значение находящееся слева от двоеточия которое находится в секции **ports**
