@@ -4,7 +4,7 @@
   "description": "Node.js + Express + Mongo application template",
   "main": "index.js",
   "scripts": {
-    "start": "export NODE_ENV=dev NODE_CONFIG_DIR=./src/config/ && babel-node --presets env src/app.js"
+    "start": "export NODE_ENV=dev NODE_CONFIG_DIR=./src/config/ && npx nodemon -w src --exec \"babel-node src/app.js --presets env\""
   },
   "keywords": [
     "REST",
@@ -24,8 +24,10 @@
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.1",
+    "migrate-mongo": "^5.0.1",
     "mongoose": "^5.5.5",
     "mongoose-paginate": "^5.0.3",
+    "mongoose-seed": "^0.6.0",
     "mongoose-unique-validator": "^2.0.3",
     "mongoose-validator": "^2.1.0",
     "node-fetch": "^2.5.0",
@@ -35,6 +37,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.7.0"
+    "babel-preset-env": "^1.7.0",
+    "nodemon": "^1.19.0"
   }
 }

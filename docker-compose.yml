@@ -9,7 +9,7 @@ services:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     volumes:
-      - ./data:/data/db
+      - db:/data/db:Z
     expose:
       - 27017
     ports:
@@ -25,9 +25,19 @@ services:
       - DB_HOST=db
     volumes:
       - ./src:/home/node/app/src
+      - node_modules_docker:/home/node/app/node_modules:ro
     ports:
       - 9000:9000
     links:
       - db
     depends_on:
       - db
+
+volumes:
+  db:
+  node_modules_docker:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/node_modules_docker
+      o: bind

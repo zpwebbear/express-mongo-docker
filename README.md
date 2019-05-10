@@ -1,115 +1,54 @@
-# Node + Express REST API skeleton
-This project is a skeleton for Node + Express REST API. It can be used as a starting point for Node REST API or just as an example how to use Express framework.
+# Node + Express + MongoDB template
 
-The repository contains a sample Express REST API which is preconfigured to install all the dependencies for instant development. The application has very simple business logic showing how to implement basic operations with user model. The main purpose of this project is to demonstrate how to organize your Express project.
+Заготовка для создания проектов на связке Express + MongoDB
 
-## Features
-The whole functionality of this project is built around two entities: users and items. Every user can have his own items. Every authorized user can manage his own set of items using the full set of CRUD operations. Unathorized user can only create a new user account.
+## System Requirements
 
-This project demonstrates how to:
- * Implement CRUD pattern in REST API
- * Organize project directory structure
- * Organize routing for large applications
- * Set up JWT authentification for private routes
- * Encrypt user passowrd in database
- * Manage and check user rights
- * Manage multi-environment configuration
- * Implement integration tests with fixtures
- * Implement pagination for lists
- * Implement sorting for lists
- * Implement filtering for lists
- * Handle CORS problem for development environment
+1. Docker > 18.04
 
-## Getting started
+   Installation instruction https://docs.docker.com/install/linux/docker-ce/ubuntu/
+2. docker-compose > 1.20
 
-### Prerequisites
-You need to have a git client to clone the repository. You can get it from http://git-scm.com/.
+   Installation instruction https://docs.docker.com/compose/install/
 
-Also you must to have node.js and npm (node.js package manager). You can get them from http://nodejs.org/.
+## Порядок работы
 
-In order to work with database, you should ave installed mongodb. Instructions on installation can be found here: https://docs.mongodb.com/manual/installation/.
+1. Клонируем репозиторий с шаблоном в директорию с проектом
 
-### Development environment
+   ```git clone https://github.com/zpwebbear/express-mongo-docker ${project_name}```
+2. Переходим в директорию проекта
+   
+   ```cd ${project_name}```
+3. Создаём директорию в которой будут отображаться node_modules контейнера
 
-Clone the `node-express-skeleton` repository using git:
+   ```mkdir node_modules_docker```
+4. Запускаем сервис Node + Express + MongoDB в фоновом режиме
+   
+   ```docker-compose up -d```
 
-```
-git clone https://github.com/romandunets/node-express-skeleton
-```
+После выполнения данной команды приложение будет доступно по адресу **localhost:9000**, а база данных по адресу **localhost:27017**
 
-Next, you need to install packages and run the application. There are two options to do that.
+## Рабочие моменты
 
-#### Running local development environment
+1. При внесении изменений в код приложения сервис api перезапускается автоматически
+2. После того как были установлены/удалены npm пакеты нужно пересобрать контейнер api:
+   
+   ```docker-compose build api && docker-compose restart api```
 
-Install dependencies:
 
-```
-npm install
-```
+## База данных
 
-Run the application:
-```
-npm start
-```
+Для базы данных создаётся отдельный volume. Данные находящиеся в контейнере дублируются на жетский диск хоста.
+Месторасположение базы данных можно узнать командой:
 
-Note: make sure that mongo db is up and running on your machines.
+```docker volume inspect "${PWD##*/}"_db```
 
-#### Running docker-compose development environment
+Путь к базе данных содержит значение по ключу **"Mountpoint"**
 
-You should have Docker and Docker-Compose on your machine to run the following commands. Build and start docker-compose containers:
+## Дополнительные возможности
 
-```
-docker-compose up
-```
-
-Container uses local directory as a volume, hence it supports hot reload for changes in the node code. For more information look at `docker-compose.yml`.
-
-This command will remove node modules and re-install them for container. This might cause troubles in running it later on OSX. Simply remove node_modules directory and run `npm install` again.
-
-### Development database
-Development database can be populated using `populatedb` script:
-```
-npm run populatedb
-```
-The command will use test fixtures to populate development database with fixtures from `test/fixtures` directory.
-
-To populate some collections only use `mongofixtures`:
-```
-mongofixtures node-express-skeleton-dev fixtures/users.js
-```
-This command can be also used to populate the same fixutres to different databases.
-
-### Tests
-
-Run tests:
-
-```
-npm test
-```
-
-## API endpoints
-This table contains the endpoints the API supports:
-
-URL | Method | Data example | Description | Query parameters | Response codes
---- | --- | --- | --- | --- | ---
-/ | GET | | ping endpoint | | 200 - OK
-/authenticate/ | POST | { email: "test@mail.com", password: "password" } | authenticate user | | 200 - Token created, 401 - Authentication failed
-/users/ | GET | | list all users | Pagination: `?page=1&pageSize=10`, Sorting ascending: `sort=email`, Sorting descending: `sort=-email`, Multiple sortings: `sort=email,-role`, Filtering: `?email=test@mail.com`, `?role=user` | 200 - Returns list of users, 401 - Authentication failed, 403 - Wrong user rights
-/users/ | POST | { email: "test@mail.com", password: "password" } | create new user | | 201 - Returns created user details, 400 - Validation failed
-/users/:userId/ | GET | | get user data details | | 200 - Returns user details, 401 - Authentication failed, 403 - Wrong user rights, 404 - User not found
-/users/:userId/ | PUT | { email: "test@mail.com", password: "password" } | update user data details | | 200 - Returns updated user details, 400 - Validation failed, 401 - Authentication failed, 403 - Wrong user rights, 404 - User not found
-/users/:userId/ | DELETE | | delete user | | 200 - OK, 401 - Authentication failed, 403 - Wrong user rights, 404 - User not found
-/users/:userId/items/ | GET | | list all items |  Pagination: `?page=1&pageSize=10`, Sorting ascending: `sort=name`, Sorting descending: `sort=-name`, Filtering: `?name=test` | 200 - Returns list of items, 401 - Authentication failed, 403 - Wrong user rights
-/users/:userId/items/ | POST | { name: "test" } | create new item for user | | 201 - Returns created item details, 400 - Validation failed
-/users/:userId/items/:id/ | GET | | get item data details | | 200 - Returns item details, 401 - Authentication failed, 403 - Wrong user rights, 404 - Item not found
-/users/:userId/items/:id/ | PUT | { name: "test" } | update item data details | | 200 - Returns updated item details, 400 - Validation failed, 401 - Authentication failed, 403 - Wrong user rights, 404 - Item not found
-/users/:userId/items/:id/ | DELETE | | delete item | | 200 - OK, 401 - Authentication failed, 403 - Wrong user rights, 404 - User not found
-
-## References
- * [Best Practices for Designing a Pragmatic RESTful API](http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#pagination)
- * [Best practices for Express app structure](https://www.terlici.com/2014/08/25/best-practices-express-structure.html)
- * [User Authentication using JWT (JSON Web Token) in Node.js (Express Framework)](https://medium.com/@pandeysoni/user-authentication-using-jwt-json-web-token-in-node-js-using-express-framework-543151a38ea1)
- * [Authenticate a Node.js API with JSON Web Tokens](https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens)
- * [5 Steps to Authenticating Node.js with JWT](https://www.codementor.io/olatundegaruba/5-steps-to-authenticating-node-js-with-jwt-7ahb5dmyr)
- * [Route Middleware to Check if a User is Authenticated in Node.js](https://scotch.io/quick-tips/route-middleware-to-check-if-a-user-is-authenticated-in-node-js)
- * [Keeping API Routing Clean Using Express Routers](https://scotch.io/tutorials/keeping-api-routing-clean-using-express-routers)
+1. migrate-mongo - пакет для создания миграций для MongoDB. 
+   1. https://github.com/seppevs/migrate-mongo#readme
+   2. http://isizov.ru/migratsii-mongodb/
+2. mongoose-seed - пакет для создания сидов для MongoDB
+   1. https://github.com/seanemmer/mongoose-seed#readme

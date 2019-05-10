@@ -26,6 +26,8 @@ build/Release
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
+package-lock.json
+
 
 # Optional npm cache directory
 .npm
@@ -33,4 +35,6 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
-data
+# docker folders mapping
+db
+node_modules_docker
